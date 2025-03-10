@@ -16,44 +16,36 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if (Auth::check() || Auth::user()->role == 'admin' || Auth::user()->role == 'user') {
-            return $next($request);
-        }
+        // if (Auth::check() || Auth::user()->role == 'admin' || Auth::user()->role == 'user') {
+        //     return $next($request);
+        // }
 
-
-
-            // $userRole = Auth::user()->role;
-            // switch ($role) {
-            //     case 'admin':
-            //         if ($userRole == 0) {
-            //             return $next($request);
-            //         }
-            //         break;
+            if (Auth::check()) {
+                $userRole = Auth::user()->role;
+                switch ($role) {
+                    case 'admin':
+                        if ($userRole == 0) {
+                            return $next($request);
+                        }
+                        break;
+                    
+                    case 'user':
+                        if ($userRole == 1) {
+                            return $next($request);
+                        }
+                        break;
+                }
                 
-            //     case 'user':
-            //         if ($userRole == 1) {
-            //             return $next($request);
-            //         }
-            //         break;
-            // }
 
-            // // if ($userRole == 0) {
-            // //     return redirect()->route('admin');
-            // // } else {
-            // //     return redirect()->route('dashboard');
-            // // }
-            
-
-            // switch ($userRole) {
-            //     case 0:
-            //         return redirect()->route('admin');
-            //         break;
-            //     case 1:
-            //         return redirect()->route('dashboard');
-            //         break;
-            // }
-        
-        abort(403);
-        
+                switch ($userRole) {
+                    case 0:
+                        return redirect()->route('admin-dashboard');
+                        break;
+                    case 1:
+                        return redirect()->route('dashboard');
+                        break;
+                }
+            }         
+        abort(403);   
     }
 }
